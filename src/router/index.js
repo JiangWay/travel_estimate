@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import travel from './_travel'
+import auth from './_auth'
 
 Vue.use(VueRouter)
 
-const routes = [
+const routes = Array.prototype.concat(
+  auth,
+  travel,
   {
     path: '/',
     redirect: 'dashboard',
@@ -71,7 +75,7 @@ const routes = [
     path: '*',
     redirect: 'error-404',
   },
-]
+)
 
 const router = new VueRouter({
   mode: 'history',

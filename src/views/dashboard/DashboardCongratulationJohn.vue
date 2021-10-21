@@ -3,22 +3,18 @@
     <v-row class="ma-0 pa-0">
       <v-col cols="8">
         <v-card-title class="text-no-wrap pt-1 ps-2">
-          Congratulations John! 🥳
+          {{ travelName }}
         </v-card-title>
-        <v-card-subtitle class="text-no-wrap ps-2">
-          You have won Trophy
-        </v-card-subtitle>
+        <v-card-title class="text-no-wrap pt-1 ps-2"> {{ userName }} 看看你花多少! 🥳 </v-card-title>
+        <v-card-subtitle class="text-no-wrap ps-2"> 你的補助為{{ travelSubsidyCeiling }} </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">
               $42.8k
             </p>
 
-            <v-btn
-              small
-              color="primary"
-            >
-              View Sales
+            <v-btn small color="primary">
+              查看詳情
             </v-btn>
           </div>
         </v-card-text>
@@ -29,7 +25,7 @@
           contain
           height="180"
           width="159"
-          :src="require(`@/assets/images/misc/triangle-${$vuetify.theme.dark ? 'dark':'light'}.png`)"
+          :src="require(`@/assets/images/misc/triangle-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
           class="greeting-card-bg"
         ></v-img>
         <v-img
@@ -43,7 +39,24 @@
     </v-row>
   </v-card>
 </template>
+<script>
+import { ref } from '@vue/composition-api'
 
+// import UpgradeToPro from './components/UpgradeToPro.vue'
+
+export default {
+  components: {
+    // UpgradeToPro,
+  },
+  setup() {
+    const userName = ref('wyn test')
+    const travelSubsidyCeiling = ref('10,000')
+    const travelName = ref('該去員旅了吧2021')
+
+    return { userName, travelSubsidyCeiling, travelName }
+  },
+}
+</script>
 <style lang="scss" scoped>
 .greeting-card {
   position: relative;

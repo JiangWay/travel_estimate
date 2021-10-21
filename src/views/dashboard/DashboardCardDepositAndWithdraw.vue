@@ -11,17 +11,11 @@
         <v-card-text>
           <v-list>
             <v-list-item
-              v-for="(data,index) in deposit"
+              v-for="(data, index) in deposit"
               :key="data.img"
-              :class="`d-flex px-0 ${index > 0 ? 'mt-4':''}`"
+              :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
             >
-              <v-img
-                contain
-                max-height="30"
-                max-width="30"
-                :src="data.img"
-                class="me-3"
-              ></v-img>
+              <v-img contain max-height="30" max-width="30" :src="data.img" class="me-3"></v-img>
 
               <div class="d-flex align-center flex-grow-1 flex-wrap">
                 <div class="me-auto pe-2">
@@ -38,10 +32,7 @@
         </v-card-text>
       </div>
 
-      <v-divider
-        class="my-sm-5 mx-5"
-        :vertical="$vuetify.breakpoint.smAndUp"
-      ></v-divider>
+      <v-divider class="my-sm-5 mx-5" :vertical="$vuetify.breakpoint.smAndUp"></v-divider>
 
       <div class="flex-grow-1">
         <v-card-title>
@@ -53,16 +44,11 @@
         <v-card-text>
           <v-list>
             <v-list-item
-              v-for="(data,index) in withdraw"
+              v-for="(data, index) in withdraw"
               :key="data.img"
-              :class="`d-flex px-0 ${index > 0 ? 'mt-4':''}`"
+              :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
             >
-              <v-img
-                max-height="30"
-                max-width="30"
-                :src="data.img"
-                class="me-3"
-              ></v-img>
+              <v-img max-height="30" max-width="30" :src="data.img" class="me-3"></v-img>
 
               <div class="d-flex align-center flex-grow-1 flex-wrap">
                 <div class="me-auto pe-2">
@@ -88,27 +74,27 @@ export default {
     const deposit = [
       {
         img: require('@/assets/images/logos/gumroad.png'),
-        title: 'Gumroad Account',
-        subtitle: 'Sell UI Kit',
-        amount: '+$4,650',
+        title: '葉綠宿旅社',
+        subtitle: '住宿',
+        amount: '+$2500',
       },
       {
         img: require('@/assets/images/logos/master.png'),
-        title: 'Mastercard',
-        subtitle: 'Wallet deposit',
-        amount: '+$92,705',
+        title: '六福村',
+        subtitle: '遊樂園',
+        amount: '+$749',
       },
       {
         img: require('@/assets/images/logos/stripe-account.png'),
-        title: 'Stripe Account',
-        subtitle: 'iOS Application',
-        amount: '+$957',
+        title: '遊覽車',
+        subtitle: '交通',
+        amount: '+$2000',
       },
       {
         img: require('@/assets/images/logos/american-bank.png'),
-        title: 'American Bank',
-        subtitle: 'Bank Transfer',
-        amount: '+$6,837',
+        title: '森森燒肉',
+        subtitle: '食',
+        amount: '+$1500',
       },
       {
         img: require('@/assets/images/logos/bank-account.png'),

@@ -1,14 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span>Total Earning</span>
+      <span>個人花費</span>
       <v-spacer></v-spacer>
 
-      <v-btn
-        icon
-        small
-        class="me-n3 mt-n2"
-      >
+      <v-btn icon small class="me-n3 mt-n2">
         <v-icon>
           {{ icons.mdiDotsVertical }}
         </v-icon>
@@ -22,10 +18,7 @@
         </h1>
 
         <div class="d-flex align-center mb-n3">
-          <v-icon
-            size="40"
-            color="success"
-          >
+          <v-icon size="40" color="success">
             {{ icons.mdiMenuUp }}
           </v-icon>
           <span class="text-base font-weight-medium success--text ms-n2">10%</span>
@@ -39,21 +32,12 @@
 
     <v-card-text>
       <div
-        v-for="(earning,index) in totalEarning"
+        v-for="(earning, index) in totalEarning"
         :key="earning.avatar"
-        :class="`d-flex align-start ${index >0 ? 'mt-8':''}`"
+        :class="`d-flex align-start ${index > 0 ? 'mt-8' : ''}`"
       >
-        <v-avatar
-          rounded
-          size="38"
-          color="#5e56690a"
-          class="me-4"
-        >
-          <v-img
-            contain
-            :src="earning.avatar"
-            height="20"
-          ></v-img>
+        <v-avatar rounded size="38" color="#5e56690a" class="me-4">
+          <v-img contain :src="earning.avatar" height="20"></v-img>
         </v-avatar>
 
         <div class="d-flex align-center flex-grow-1 flex-wrap">
@@ -70,10 +54,7 @@
             <p class="text--primary font-weight-medium mb-1">
               {{ earning.earning }}
             </p>
-            <v-progress-linear
-              :value="earning.progress"
-              :color="earning.color"
-            ></v-progress-linear>
+            <v-progress-linear :value="earning.progress" :color="earning.color"></v-progress-linear>
           </div>
         </div>
       </div>
