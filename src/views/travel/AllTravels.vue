@@ -2,15 +2,24 @@
 <template>
   <v-row>
     <!-- 金額總覽 -->
-    <v-col cols="12" md="4">
+    <v-col
+      cols="12"
+      md="4"
+    >
       <v-card-title class="text-no-wrap pt-1 ps-2">
         所有行程
       </v-card-title>
     </v-col>
 
-    <v-col cols="12" md="4">
+    <v-col
+      cols="12"
+      md="4"
+    >
       <v-row class="match-height">
-        <v-col cols="12" sm="6">
+        <v-col
+          cols="12"
+          sm="6"
+        >
           <one-travel
             :change="newProject.change"
             :color="newProject.color"
@@ -21,7 +30,10 @@
           >
           </one-travel>
         </v-col>
-        <v-col cols="12" sm="6">
+        <v-col
+          cols="12"
+          sm="6"
+        >
           <one-travel
             :change="wynTest.change"
             :color="wynTest.color"
@@ -34,14 +46,6 @@
         </v-col>
       </v-row>
     </v-col>
-
-    <!-- <v-col cols="12" md="4">
-      <dashboard-card-sales-by-countries></dashboard-card-sales-by-countries>
-    </v-col>
-
-    <v-col cols="12">
-      <dashboard-datatable></dashboard-datatable>
-    </v-col> -->
   </v-row>
 </template>
 
@@ -49,6 +53,9 @@
 // eslint-disable-next-line object-curly-newline
 // eslint-disable-next-line no-unused-vars
 import { mdiLabelVariantOutline, mdiWalletTravel, mdiBus } from '@mdi/js'
+import {
+  collection, query, getDocs,
+} from 'firebase/firestore'
 import OneTravel from '@/components/travel/OneTravel.vue'
 
 // demos
@@ -61,6 +68,15 @@ export default {
 
     //   DashboardCardSalesByCountries,
     //   DashboardDatatable,
+  },
+  async mounted() {
+    const q = query(collection(this.$db, 'travel'))
+
+    const querySnapshot = await getDocs(q)
+    querySnapshot.forEach(doc => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, ' => ', doc.data())
+    })
   },
   setup() {
     // vertical card options

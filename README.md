@@ -9,10 +9,11 @@
 ### 前端
 #### 已使用
 * vue cli
-* vue3
+* vu e2.6.x
 * router
 * vuex
 * vuetify
+* composition-api
 #### 想用但還沒套用上
 * vuex-orm
 * vueuse

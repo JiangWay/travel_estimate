@@ -10,7 +10,7 @@ const routes = Array.prototype.concat(
   travel,
   {
     path: '/',
-    redirect: 'dashboard',
+    redirect: 'travel/all',
   },
   {
     path: '/dashboard',
