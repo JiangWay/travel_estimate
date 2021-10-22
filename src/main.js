@@ -4,6 +4,8 @@ import Vue from 'vue'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
+
+import { getFirestore } from 'firebase/firestore'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
@@ -23,6 +25,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 initializeApp(firebaseConfig)
+
+const db = getFirestore()
+
+// 全域變數 但無法使用在composition-api 上
+Vue.prototype.$db = db
 
 Vue.config.productionTip = false
 

@@ -1,5 +1,11 @@
 <template>
-  <v-menu offset-y left nudge-bottom="14" min-width="230" content-class="user-profile-menu-content">
+  <v-menu
+    offset-y
+    left
+    nudge-bottom="14"
+    min-width="230"
+    content-class="user-profile-menu-content"
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-badge
         bottom
@@ -10,7 +16,11 @@
         class="ms-4"
         dot
       >
-        <v-avatar size="40px" v-bind="attrs" v-on="on">
+        <v-avatar
+          size="40px"
+          v-bind="attrs"
+          v-on="on"
+        >
           <v-img :src="require('@/assets/images/avatars/1.png')"></v-img>
         </v-avatar>
       </v-badge>
@@ -30,7 +40,10 @@
             <v-img :src="require('@/assets/images/avatars/1.png')"></v-img>
           </v-avatar>
         </v-badge>
-        <div class="d-inline-flex flex-column justify-center ms-3" style="vertical-align:middle">
+        <div
+          class="d-inline-flex flex-column justify-center ms-3"
+          style="vertical-align:middle"
+        >
           <span class="text--primary font-weight-semibold mb-n1">{{ userInfo.displayName }} </span>
           <small class="text--disabled">{{ userInfo.email }}</small>
         </div>
@@ -67,7 +80,11 @@
       <v-divider class="my-2"></v-divider>
 
       <!-- Logout -->
-      <v-list-item v-if="userInfo.isLogin" link @click="logout()">
+      <v-list-item
+        v-if="userInfo.isLogin"
+        link
+        @click="logout()"
+      >
         <v-list-item-icon class="me-2">
           <v-icon size="22">
             {{ icons.mdiLogoutVariant }}
@@ -79,7 +96,11 @@
       </v-list-item>
 
       <!-- Login -->
-      <v-list-item v-else link @click="login()">
+      <v-list-item
+        v-else
+        link
+        @click="login()"
+      >
         <v-list-item-icon class="me-2">
           <v-icon size="22">
             {{ icons.mdiLoginVariant }}
@@ -98,45 +119,42 @@
 import { mdiAccountOutline, mdiCogOutline, mdiLogoutVariant, mdiLoginVariant } from '@mdi/js'
 // eslint-disable-next-line object-curly-newline
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth'
-import { reactive } from '@vue/composition-api'
+import { getDoc, doc, setDoc } from 'firebase/firestore'
 
 export default {
   data() {
-    return {}
+    return {
+      userInfo: {
+        displayName: 'wyn',
+        email: '123@mail.com',
+        isLogin: false,
+      },
+    }
   },
   computed: {},
-  methods: {},
-  setup() {
+  mounted() {
     const auth = getAuth()
-
-    // 登入狀態
-
-    // const user = auth.currentUser
-    const userInfo = reactive({
-      displayName: 'wyn',
-      email: '123@mail.com',
-      isLogin: false,
-    })
-
     onAuthStateChanged(auth, user => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         console.log('已登入')
         console.log(user)
-        userInfo.displayName = user.displayName
-        userInfo.email = user.email
-        userInfo.isLogin = true
-        console.log(userInfo.isLogin)
+        this.userInfo.displayName = user.displayName
+        this.userInfo.email = user.email
+        this.userInfo.isLogin = true
+        console.log(this.userInfo.isLogin)
       } else {
         console.log('已被登出')
-        userInfo.displayName = ''
-        userInfo.email = ''
-        userInfo.isLogin = false
+        this.userInfo.displayName = ''
+        this.userInfo.email = ''
+        this.userInfo.isLogin = false
       }
     })
-
-    const logout = async () => {
+  },
+  methods: {
+    async logout() {
+      const auth = getAuth()
       await signOut(auth)
         .then(() => {
           console.log('登出成功')
@@ -144,15 +162,15 @@ export default {
         .catch(error => {
           console.log(error)
         })
-    }
-    const login = async () => {
+    },
+    async login() {
       const provider = new GoogleAuthProvider()
       provider.setCustomParameters({
         login_hint: 'user@webcomm.com.tw',
       })
 
       // const auth = getAuth()
-
+      const auth = getAuth()
       signInWithPopup(auth, provider)
         .then(result => {
           // This gives you a Google Access Token. You can use it to access the Google API.
@@ -160,11 +178,10 @@ export default {
           const token = credential.accessToken
 
           // The signed-in user info.
-          const { user1 } = result
-
-          // ...
+          const { user } = result
+          console.log(user)
           console.log(token)
-          console.log(user1)
+          this.checkTraveler(user)
 
           console.log('登入成功')
         })
@@ -185,8 +202,33 @@ export default {
 
           // ...
         })
-    }
-
+    },
+    async checkTraveler(user) {
+      const docRef = doc(this.$db, 'traveler', user.uid)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data())
+      } else {
+        // doc.data() will be undefined in this case
+        this.saveTraveler(user)
+        console.log('No such document!')
+      }
+    },
+    async saveTraveler(user) {
+      // eslint-disable-next-line no-undef
+      try {
+        const docRef = await setDoc(doc(this.$db, 'traveler', user.uid), {
+          id: user.uid, // uid
+          name: user.displayName, // displayName
+          email: user.email, // email
+        })
+        console.log('Document written with ID: ', docRef.id)
+      } catch (e) {
+        console.error('Error adding document: ', e)
+      }
+    },
+  },
+  setup() {
     return {
       icons: {
         mdiAccountOutline,
@@ -194,9 +236,6 @@ export default {
         mdiLogoutVariant,
         mdiLoginVariant,
       },
-      login,
-      logout,
-      userInfo,
     }
   },
 }
