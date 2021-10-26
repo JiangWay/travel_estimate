@@ -15,6 +15,7 @@ import LayoutContent from '@/layouts/Content.vue'
 
 export default {
   components: {
+
     LayoutBlank,
     LayoutContent,
 

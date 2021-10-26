@@ -23,6 +23,12 @@ export default [
     path: '/travel/overview',
     name: 'travelOverview',
     component: () => import('@/views/travel/Overview.vue'),
+    beforeEnter: (to, from, next) => {
+      console.log(to.params)
+
+      // console.log(from)
+      next()
+    },
   },
   {
     path: '/travel/addMyItem',

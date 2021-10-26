@@ -24,7 +24,7 @@
 <script>
 import { collection, addDoc } from 'firebase/firestore'
 import {
-  Travel, TravelInfo, TravelType, TravelItem,
+  Travel, TravelInfo, TravelType, TravelItem, TravelCost, Company,
 } from '@/store/model'
 
 // const db = getFirestore()
@@ -54,7 +54,7 @@ export default {
     },
     getTravelInfo() {
       const info = new TravelInfo()
-      info.title = '2021人還是有夠多員旅'
+      info.title = '2021人還是有夠多員旅 version 2'
       info.subTitle = '六福村 X 夜市 X 燒肉'
       info.desc = '六福村 X 夜市 X 燒肉'
       info.startDate = new Date(2021, 10, 13)
@@ -66,18 +66,16 @@ export default {
     getTravelType() {
       const type = new TravelType()
       type.type = 'empTravel' //  員工旅遊
-      type.taxId = '77030333'
-      type.taxTitle = '偉康科技股份有限公司職工福利委員會'
-      type.limit = 10000 // 旅遊補助上限
+      type.company = { ...new Company() }
 
       return type
     },
     getTravelItems() {
       return [
-        { ...new TravelItem('六福村', '遊樂園', '開心玩', new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
-        { ...new TravelItem('坐巴士', '交通', '開心玩', new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
-        { ...new TravelItem('葉綠宿', '住宿', '開心玩', new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
-        { ...new TravelItem('森森燒肉', '食', '開心玩', new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
+        { ...new TravelItem('六福村', '遊樂園', '開心玩', { ...new TravelCost('itinerary', 'perPerson', 749, true) }, new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
+        { ...new TravelItem('坐巴士', '交通', '開心玩', { ...new TravelCost('itinerary', 'total', 25000, true) }, new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
+        { ...new TravelItem('葉綠宿', '住宿', '開心玩', { ...new TravelCost('itinerary', 'byCase', 2500, true) }, new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
+        { ...new TravelItem('森森燒肉', '食', '開心玩', { ...new TravelCost('itinerary', 'perPerson', 25000, true) }, new Date(2021, 10, 13), new Date(2021, 10, 13), []) },
       ]
     },
     async uploadTravel(travel) {

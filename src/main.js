@@ -6,6 +6,11 @@ import Vue from 'vue'
 import { initializeApp } from 'firebase/app'
 
 import { getFirestore } from 'firebase/firestore'
+import _ from 'lodash'
+import moment from 'moment'
+import numeral from 'numeral'
+import vueNumeralFilterInstaller from 'vue-numeral-filter'
+
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
@@ -30,7 +35,11 @@ const db = getFirestore()
 
 // 全域變數 但無法使用在composition-api 上
 Vue.prototype.$db = db
+Vue.prototype.$lodash = _
+Vue.prototype.$moment = moment
+Vue.prototype.$numeral = numeral
 
+Vue.use(vueNumeralFilterInstaller)
 Vue.config.productionTip = false
 
 new Vue({

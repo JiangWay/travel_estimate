@@ -120,6 +120,7 @@ import { mdiAccountOutline, mdiCogOutline, mdiLogoutVariant, mdiLoginVariant } f
 // eslint-disable-next-line object-curly-newline
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth'
 import { getDoc, doc, setDoc } from 'firebase/firestore'
+import { mapMutations } from 'vuex'
 
 export default {
   data() {
@@ -153,6 +154,9 @@ export default {
     })
   },
   methods: {
+    ...mapMutations([
+      'setTraveler',
+    ]),
     async logout() {
       const auth = getAuth()
       await signOut(auth)
@@ -207,6 +211,7 @@ export default {
       const docRef = doc(this.$db, 'traveler', user.uid)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
+        this.setTraveler(docSnap.data())
         console.log('Document data:', docSnap.data())
       } else {
         // doc.data() will be undefined in this case
@@ -221,6 +226,13 @@ export default {
           id: user.uid, // uid
           name: user.displayName, // displayName
           email: user.email, // email
+          joinedTravels: [],
+        })
+        this.setTraveler({
+          id: user.uid, // uid
+          name: user.displayName, // displayName
+          email: user.email, // email
+          joinedTravels: [],
         })
         console.log('Document written with ID: ', docRef.id)
       } catch (e) {

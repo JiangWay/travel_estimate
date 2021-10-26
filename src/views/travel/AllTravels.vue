@@ -7,11 +7,89 @@
       md="4"
     >
       <v-card-title class="text-no-wrap pt-1 ps-2">
-        所有行程
+        已參加行程
       </v-card-title>
     </v-col>
 
+    <!-- 已參加行程 -->
     <v-col
+      v-for="(travel ,idx) in travelList"
+      :key="idx+'ed'"
+      lg="4"
+      sm="6"
+      cols="12"
+      class="align-self-start"
+    >
+      <v-card>
+        <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
+        <v-card-title>{{ travel.info.title }}</v-card-title>
+        <v-card-text>
+          <p class="text--primary text-base">
+            {{ travel.status }}
+          </p>
+          {{ travel.info.subTitle }}
+        </v-card-text>
+        <v-card-actions
+          class="primary pa-0"
+          @click="goToTravel(travel)"
+        >
+          <v-btn
+            color="primary"
+            block
+            dark
+            large
+          >
+            查看詳情
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+
+    <!-- 尚未參加行程 -->
+    <v-col
+      cols="12"
+      md="4"
+    >
+      <v-card-title class="text-no-wrap pt-1 ps-2">
+        行程探索
+      </v-card-title>
+    </v-col>
+
+    <!-- 尚未參加行程 -->
+    <v-col
+      v-for="(travel ,idx) in travelList"
+      :key="idx"
+      lg="4"
+      sm="6"
+      cols="12"
+      class="align-self-start"
+    >
+      <v-card>
+        <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
+        <v-card-title>{{ travel.info.title }}</v-card-title>
+        <v-card-text>
+          <p class="text--primary text-base">
+            {{ travel.status }}
+          </p>
+          {{ travel.info.subTitle }}
+        </v-card-text>
+        <v-card-actions
+          class="primary pa-0"
+          @click="letsJoin(travel)"
+        >
+          <v-btn
+            color="primary"
+            block
+            dark
+            large
+          >
+            我要參加
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+
+    <!-- <v-col
       cols="12"
       md="4"
     >
@@ -45,7 +123,7 @@
           </one-travel>
         </v-col>
       </v-row>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 
@@ -56,27 +134,69 @@ import { mdiLabelVariantOutline, mdiWalletTravel, mdiBus } from '@mdi/js'
 import {
   collection, query, getDocs,
 } from 'firebase/firestore'
-import OneTravel from '@/components/travel/OneTravel.vue'
 
-// demos
-// import DashboardCardSalesByCountries from '@/views/dashboard/DashboardCardSalesByCountries.vue'
-// import DashboardDatatable from '@/views/dashboard/DashboardDatatable.vue'
+// import { Travel } from '@/store/model'
 
 export default {
   components: {
-    OneTravel,
+    // OneTravel,
 
     //   DashboardCardSalesByCountries,
     //   DashboardDatatable,
   },
-  async mounted() {
+  data() {
+    return {
+      travelList: [],
+    }
+  },
+  async created() {
     const q = query(collection(this.$db, 'travel'))
 
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach(doc => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data())
+      const data = JSON.parse(JSON.stringify(doc.data()))
+      const travel = {
+        id: doc.id,
+        status: data.status,
+        info: data.info,
+        travelItems: data.travelItems,
+        travelType: data.travelType,
+      }
+      this.travelList.push(travel)
     })
+  },
+  methods: {
+    goToTravel(data) {
+      this.$router.push({
+        name: 'travelOverview',
+        params: {
+          travel: {
+            id: data.id,
+            status: data.status,
+            info: data.info,
+            travelItems: data.travelItems,
+            travelType: data.travelType,
+          },
+        },
+      })
+    },
+    letsJoin(data) {
+      // 接續頁面可考慮做keepAlive
+      console.log(data)
+      this.$router.push({
+        name: 'travelAgreement',
+        params: {
+          travel: {
+            id: data.id,
+            status: data.status,
+            info: data.info,
+            travelItems: data.travelItems,
+            travelType: data.travelType,
+          },
+        },
+      })
+    },
   },
   setup() {
     // vertical card options
