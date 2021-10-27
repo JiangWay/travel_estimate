@@ -20,7 +20,7 @@
       cols="12"
       class="align-self-start"
     >
-      <v-card>
+      <v-card v-if="travel.status === TravelStatus.Joined">
         <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
         <v-card-title>{{ travel.info.title }}</v-card-title>
         <v-card-text>
@@ -64,7 +64,7 @@
       cols="12"
       class="align-self-start"
     >
-      <v-card>
+      <v-card v-if="travel.status === TravelStatus.Opened">
         <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
         <v-card-title>{{ travel.info.title }}</v-card-title>
         <v-card-text>
@@ -135,7 +135,7 @@ import {
   collection, query, getDocs,
 } from 'firebase/firestore'
 
-// import { Travel } from '@/store/model'
+import { TravelStatus } from '@/store/model'
 
 export default {
   components: {
@@ -220,6 +220,7 @@ export default {
     return {
       newProject,
       wynTest,
+      TravelStatus,
     }
   },
 }

@@ -12,6 +12,21 @@ export function Company() {
   this.travelLimit = 10000 // 旅遊補助上限
 }
 
+// 旅遊者 參加的旅遊項目
+export function JoinedItem() {
+  this.itemId = ''
+  this.name = ''
+  this.enrollment = 1 // 報名人數
+  this.note = ''// 備註
+}
+
+// 旅遊者 參加的旅遊
+export function JoinedTravel() {
+  this.travelId = ''
+  this.travelStatus = ''
+  this.JoinedItems = []
+}
+
 // 參加該項目的旅遊者
 export function Traveler() {
   this.uuid = 'wyn'
@@ -19,6 +34,7 @@ export function Traveler() {
   this.email = ''
   this.travelOwner = []
   this.company = new Company()
+  this.joinedTravels = new JoinedTravel()
 }
 
 export function TravelInfo() {
@@ -41,7 +57,21 @@ export function TravelType() {
 //   this.cost = '25000'
 //   this.isTax = true // 可否打統編
 // }
-export function TravelCost(type, countType, cost, isTax) {
+
+// FIXME:引用ts後 可改用enum
+export const TravelCostType = {
+  Itinerary: 'itinerary', // 行程
+  TogetherBuy: 'togetherBuy', // 團購
+  Private: 'private', // 個人
+}
+export const TravelCostCountType = {
+  Total: 'total', // 總額
+  PerPerson: 'perPerson', // 每人多少(均分)
+  ByCase: 'byCase', // 個案(如雙人房 四人房 不同價格)
+  Private: 'Private', // 個人
+}
+
+export function TravelCost(type = TravelCostType.Itinerary, countType = TravelCostCountType.Total, cost = 0, isTax = false) {
   this.type = type // itinerary, togetherBuy, private 行程, 團購, 個人
   this.countType = countType// total,perPerson,byCase,private  計算方式 總額 或 每人多少 或 個案(如雙人房 四人房 不同價格) 或私人項目
   this.cost = cost
@@ -66,9 +96,16 @@ export function TravelItem(name, type, desc, travelCost, startDate, endDate, tra
   this.travelers = travelers
 }
 
+export const TravelStatus = {
+  Opened: 'opened', // 可報名
+  Ing: 'ing', // 旅程進行中
+  End: 'end', // 已結束
+  Joined: 'joined', // 已報名
+}
+
 export function Travel() {
   this.id = ''
-  this.status = 'ing' // prepare,ing,end
+  this.status = TravelStatus.Ing // open,ing,end,joined 開團招募中 進行中 已結束 已報名
   this.info = new TravelInfo()
   this.travelType = new TravelType()// 旅遊型態 員工旅遊
   this.travelItems = []// TravelItem()

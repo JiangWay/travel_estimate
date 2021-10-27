@@ -144,12 +144,14 @@ export default {
         this.userInfo.displayName = user.displayName
         this.userInfo.email = user.email
         this.userInfo.isLogin = true
+        this.setTraveler(user)
         console.log(this.userInfo.isLogin)
       } else {
         console.log('已被登出')
         this.userInfo.displayName = ''
         this.userInfo.email = ''
         this.userInfo.isLogin = false
+        this.setTraveler({})
       }
     })
   },

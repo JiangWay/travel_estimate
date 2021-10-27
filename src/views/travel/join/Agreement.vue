@@ -109,11 +109,13 @@ import {
   mdiTrendingUp,
   mdiHelpCircleOutline,
 } from '@mdi/js'
-// eslint-disable-next-line no-unused-vars
-// import { useRouter, useRoute } from 'vue-router'
 
 export default {
   setup(props, context) {
+    console.log(context)
+    console.log(context.root)
+    console.log(context.root.$router)
+    console.log(context.$router)
     const router = context.root.$router
     const route = context.root.$route
     const { travel } = route.params
