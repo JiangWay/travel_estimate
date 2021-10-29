@@ -12,39 +12,39 @@
     </v-col>
 
     <!-- 已參加行程 -->
-    <v-col
-      v-for="(travel ,idx) in travelList"
-      :key="idx+'ed'"
-      lg="4"
-      sm="6"
-      cols="12"
-      class="align-self-start"
-    >
-      <v-card v-if="travel.status === TravelStatus.Joined">
-        <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
-        <v-card-title>{{ travel.info.title }}</v-card-title>
-        <v-card-text>
-          <p class="text--primary text-base">
-            {{ travel.status }}
-          </p>
-          {{ travel.info.subTitle }}
-        </v-card-text>
-        <v-card-actions
-          class="primary pa-0"
-          @click="goToTravel(travel)"
-        >
-          <v-btn
-            color="primary"
-            block
-            dark
-            large
+    <template v-for="(travel ,idx) in joinedTravels">
+      <v-col
+        :key="idx+'ed'"
+        lg="4"
+        sm="6"
+        cols="12"
+        class="align-self-start"
+      >
+        <v-card>
+          <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
+          <v-card-title>{{ travel.info.title }}</v-card-title>
+          <v-card-text>
+            <p class="text--primary text-base">
+              {{ travel.status }}
+            </p>
+            {{ travel.info.subTitle }}
+          </v-card-text>
+          <v-card-actions
+            class="primary pa-0"
+            @click="goToTravel(travel)"
           >
-            查看詳情
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-
+            <v-btn
+              color="primary"
+              block
+              dark
+              large
+            >
+              查看詳情
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </template>
     <!-- 尚未參加行程 -->
     <v-col
       cols="12"
@@ -56,39 +56,39 @@
     </v-col>
 
     <!-- 尚未參加行程 -->
-    <v-col
-      v-for="(travel ,idx) in travelList"
-      :key="idx"
-      lg="4"
-      sm="6"
-      cols="12"
-      class="align-self-start"
-    >
-      <v-card v-if="travel.status === TravelStatus.Opened">
-        <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
-        <v-card-title>{{ travel.info.title }}</v-card-title>
-        <v-card-text>
-          <p class="text--primary text-base">
-            {{ travel.status }}
-          </p>
-          {{ travel.info.subTitle }}
-        </v-card-text>
-        <v-card-actions
-          class="primary pa-0"
-          @click="letsJoin(travel)"
-        >
-          <v-btn
-            color="primary"
-            block
-            dark
-            large
+    <template v-for="(travel ,idx) in travelList">
+      <v-col
+        :key="idx"
+        lg="4"
+        sm="6"
+        cols="12"
+        class="align-self-start"
+      >
+        <v-card>
+          <v-img src="@/assets/images/pages/card-basic-brown-watch.jpg"></v-img>
+          <v-card-title>{{ travel.info.title }}</v-card-title>
+          <v-card-text>
+            <p class="text--primary text-base">
+              {{ travel.status }}
+            </p>
+            {{ travel.info.subTitle }}
+          </v-card-text>
+          <v-card-actions
+            class="primary pa-0"
+            @click="letsJoin(travel)"
           >
-            我要參加
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-
+            <v-btn
+              color="primary"
+              block
+              dark
+              large
+            >
+              我要參加
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </template>
     <!-- <v-col
       cols="12"
       md="4"
@@ -135,7 +135,9 @@ import {
   collection, query, getDocs,
 } from 'firebase/firestore'
 
+import { mapState } from 'vuex'
 import { TravelStatus } from '@/store/model'
+import { travelConverter } from '@/store/model/travel'
 
 export default {
   components: {
@@ -146,24 +148,24 @@ export default {
   },
   data() {
     return {
-      travelList: [],
+      travelList: [], // 未參加
+      joinedTravels: [], // 已參加
     }
   },
+  computed: { ...mapState(['traveler']) },
   async created() {
-    const q = query(collection(this.$db, 'travel'))
+    const q = query(collection(this.$db, 'travel').withConverter(travelConverter))
 
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach(doc => {
-      // doc.data() is never undefined for query doc snapshots
-      const data = JSON.parse(JSON.stringify(doc.data()))
-      const travel = {
-        id: doc.id,
-        status: data.status,
-        info: data.info,
-        travelItems: data.travelItems,
-        travelType: data.travelType,
+      const travel = doc.data()
+      console.log(travel.id)
+      const joinedTravels = this.traveler.joinedTravels.find(t => t.travelId === travel.id)
+      if (joinedTravels !== undefined) {
+        this.joinedTravels.push(travel)
+      } else {
+        this.travelList.push(travel)
       }
-      this.travelList.push(travel)
     })
   },
   methods: {
@@ -183,7 +185,7 @@ export default {
     },
     letsJoin(data) {
       // 接續頁面可考慮做keepAlive
-      console.log(data)
+      // console.log(data)
       this.$router.push({
         name: 'travelAgreement',
         params: {

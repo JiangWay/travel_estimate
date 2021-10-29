@@ -65,8 +65,6 @@ export default {
     overStatusCard: { type: Array, default: () => [] },
   },
   setup(props) {
-    console.log(props)
-    console.log(props.overStatusCard)
     const statisticsData = props.overStatusCard
     console.log(statisticsData)
 

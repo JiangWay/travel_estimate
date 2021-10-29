@@ -36,103 +36,6 @@
                   ></v-text-field>
                 </v-col>
               </template>
-              <!-- <v-col
-                cols="12"
-                md="3"
-              >
-                <label for="firstname">六福村 人數</label>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="9"
-              >
-                <v-text-field
-                  id="firstname"
-                  v-model="firstname"
-                  outlined
-                  dense
-                  placeholder="六福村 人數"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <label for="email">巴士 人數</label>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="9"
-              >
-                <v-text-field
-                  id="email"
-                  v-model="email"
-                  outlined
-                  dense
-                  placeholder="巴士 人數"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <label for="mobile">住宿 人數</label>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="9"
-              >
-                <v-text-field
-                  id="mobile"
-                  v-model="mobile"
-                  type="number"
-                  outlined
-                  dense
-                  placeholder="住宿 人數"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <label for="password">燒肉 人數</label>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="9"
-              >
-                <v-text-field
-                  id="password"
-                  v-model="password"
-                  type="number"
-                  outlined
-                  dense
-                  placeholder="燒肉 人數"
-                  hide-details
-                ></v-text-field>
-              </v-col> -->
-
-              <!-- <v-col
-                offset-md="3"
-                cols="12"
-              >
-                <v-checkbox
-                  v-model="checkbox"
-                  label="Remember me"
-                  class="mt-0"
-                  hide-details
-                ></v-checkbox>
-              </v-col> -->
 
               <v-col
                 offset-md="3"
@@ -168,7 +71,7 @@ import { JoinedTravel, JoinedItem } from '@/store/model'
 
 export default {
   setup(props, context) {
-    // const router = context.root.$router
+    const router = context.root.$router
     const route = context.root.$route
     const { travel } = route.params
     console.log('travel = ', travel)
@@ -178,13 +81,13 @@ export default {
     const { traveler } = store.state
     console.log('traveler = ', traveler)
 
-    // TODO: 響應 joinedTravel
+    // 響應 joinedTravel
     const joinedTravel = reactive(new JoinedTravel())
     console.log('joinedTravel = ', joinedTravel)
     try {
       joinedTravel.travelId = travel.id
       joinedTravel.travelStatus = travel.status
-      joinedTravel.JoinedItems = []
+      joinedTravel.joinedItems = []
       const travelItems = Object.keys(travel.travelItems).map(key => ({ itemId: key, ...travel.travelItems[key] }))
       travelItems.forEach(item => {
         console.log(item)
@@ -193,31 +96,27 @@ export default {
         joinedItem.name = item.name
         joinedItem.enrollment = 1
         joinedItem.note = item.desc
-        joinedTravel.JoinedItems.push(joinedItem)
+        joinedTravel.joinedItems.push(joinedItem)
       })
     } catch (err) {
       console.log(err)
     }
     console.log('joinedTravel = ', joinedTravel)
 
-    // const formArray = []
-    // const firstname = ref('')
-    // const email = ref('')
-    // const mobile = ref()
-    // const password = ref()
-    // const checkbox = ref(false)
+    const submit = async () => {
+      console.log(joinedTravel.joinedItems)
+      const form = { ...joinedTravel }
+      form.joinedItems = form.joinedItems.map(item => ({ ...item }))
+      console.log(form)
 
-    const submit = () => {
-      console.log(joinedTravel.JoinedItems)
+      // access an action
+      await store.dispatch('submitJoinTravelFrom', form)
+      router.push({ name: 'allTravels' })
     }
+    console.log(joinedTravel.joinedItems)
 
     return {
-      // firstname,
-      // email,
-      // mobile,
-      // password,
-      // checkbox,
-      joinedItems: joinedTravel.JoinedItems,
+      joinedItems: joinedTravel.joinedItems,
       submit,
     }
   },

@@ -20,21 +20,21 @@ export function JoinedItem() {
   this.note = ''// 備註
 }
 
-// 旅遊者 參加的旅遊
+// 旅遊者 參加的某一旅遊
 export function JoinedTravel() {
   this.travelId = ''
   this.travelStatus = ''
-  this.JoinedItems = []
+  this.joinedItems = []
 }
 
 // 參加該項目的旅遊者
 export function Traveler() {
-  this.uuid = 'wyn'
-  this.displayName = ''
+  this.id = 'wyn'
+  this.name = ''
   this.email = ''
   this.travelOwner = []
   this.company = new Company()
-  this.joinedTravels = new JoinedTravel()
+  this.joinedTravels = []
 }
 
 export function TravelInfo() {
@@ -110,3 +110,27 @@ export function Travel() {
   this.travelType = new TravelType()// 旅遊型態 員工旅遊
   this.travelItems = []// TravelItem()
 }
+
+// Firestore data converter
+// export const travelerConverter = {
+//   toFirestore: traveler => ({
+//     id: traveler.id,
+//     name: traveler.name,
+//     email: traveler.email,
+//     travelOwner: traveler.travelOwner,
+//     company: traveler.company,
+//     joinedTravels: traveler.joinedTravels.map(join => ({ ...join })),
+//   }),
+//   fromFirestore: (snapshot, options) => {
+//     const data = snapshot.data(options)
+//     const traveler = new Traveler()
+//     traveler.id = data.id
+//     traveler.name = data.name
+//     traveler.email = data.email
+//     traveler.travelOwner = data.travelOwner
+//     traveler.company = data.company
+
+//     // traveler.joinedTravels = data.joinedTravels.map(join => new JoinedTravel())
+//     return new Traveler(data.name, data.state, data.country)
+//   },
+// }

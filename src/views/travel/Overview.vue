@@ -101,7 +101,7 @@ export default {
       return totalCost
     },
     totalCost() {
-      return this.itinerarayTotalCost + 500
+      return this.itinerarayTotalCost + 500 + 700
     },
     overStatusCard() {
       const array = [

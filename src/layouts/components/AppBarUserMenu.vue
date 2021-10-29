@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 <template>
   <v-menu
     offset-y
@@ -121,6 +122,7 @@ import { mdiAccountOutline, mdiCogOutline, mdiLogoutVariant, mdiLoginVariant } f
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth'
 import { getDoc, doc, setDoc } from 'firebase/firestore'
 import { mapMutations } from 'vuex'
+import { travelerConverter } from '@/store/model/traveler'
 
 export default {
   data() {
@@ -144,13 +146,18 @@ export default {
         this.userInfo.displayName = user.displayName
         this.userInfo.email = user.email
         this.userInfo.isLogin = true
-        this.setTraveler(user)
+
+        // 用uid 將traveler呼叫出來
+
+        this.checkTraveler(user)
         console.log(this.userInfo.isLogin)
       } else {
         console.log('已被登出')
         this.userInfo.displayName = ''
         this.userInfo.email = ''
         this.userInfo.isLogin = false
+
+        // 登出則清除
         this.setTraveler({})
       }
     })
@@ -193,30 +200,27 @@ export default {
         })
         .catch(error => {
           // Handle Errors here.
-          // eslint-disable-next-line no-unused-vars
-          const errorCode = error.code
-          // eslint-disable-next-line no-unused-vars
-          const errorMessage = error.message
-
-          // The email of the user's account used.
-          // eslint-disable-next-line no-unused-vars
-          const { email } = error
-
-          // The AuthCredential type that was used.
-          // eslint-disable-next-line no-unused-vars
-          const credential = GoogleAuthProvider.credentialFromError(error)
-
-          // ...
+          // const errorCode = error.code
+          // const errorMessage = error.message
+          // const { email } = error
+          // const credential = GoogleAuthProvider.credentialFromError(error)
+          console.log(error)
         })
     },
     async checkTraveler(user) {
-      const docRef = doc(this.$db, 'traveler', user.uid)
+      console.log('確認旅行者')
+      const docRef = doc(this.$db, 'traveler', user.uid).withConverter(travelerConverter)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
+        console.log('已存在的旅行者')
+        console.log(docSnap.data())
         this.setTraveler(docSnap.data())
         console.log('Document data:', docSnap.data())
       } else {
+        console.log('新加入的旅行者')
+
         // doc.data() will be undefined in this case
+        // 首次登入 只取要的資訊存進去
         this.saveTraveler(user)
         console.log('No such document!')
       }
@@ -224,7 +228,7 @@ export default {
     async saveTraveler(user) {
       // eslint-disable-next-line no-undef
       try {
-        const docRef = await setDoc(doc(this.$db, 'traveler', user.uid), {
+        const docRef = await setDoc(doc(this.$db, 'traveler', user.uid).withConverter(travelerConverter), {
           id: user.uid, // uid
           name: user.displayName, // displayName
           email: user.email, // email
